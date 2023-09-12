@@ -47,24 +47,26 @@ class Yuna(LeggedRobot):
         # self.init_joint_angle_index = torch.arange(8)
         # self.init_joint_angle_index = self.init_joint_angle_index.view(self.num_envs,8)
         joint_angle_array = np.loadtxt('/home/mananaro/Yuna_MoCap_gym/data/Yuna_walk_train_data.txt',dtype=np.float32,delimiter=',')
-        noise = np.random.normal(0,0.01,joint_angle_array.shape)
+        noise = np.random.normal(0.1,0.01,joint_angle_array.shape)
         joint_angle_array = joint_angle_array + noise
 
         joint_angle_tensor = torch.Tensor(joint_angle_array).to(self.device)
-        rewards = torch.zeros((self.num_envs)).to(self.device)
-        reward_env = torch.zeros((6)).to(self.device)
+        idx = torch.zeros((self.num_envs)).to(self.device)
+        reward_env = torch.zeros((7)).to(self.device)
         for i in range(self.num_envs):
-            for j in range(6):
+            for j in range(7):
                 reward = torch.norm((self.dof_pos[i] - joint_angle_tensor[j]),p=2)
                 reward_env[j] = (reward)
-            rewards[i] = torch.argmin(reward_env)
+            idx[i] = torch.argmin(reward_env)
 
-        rewards = rewards + 1
-        rewards = rewards%6
+        idx = idx + 1
+        idx = idx%7
         # print(joint_angle_tensor)
         # dof_pos = joint_angle_tensor
-        pos_dist = -2*rewards
-        post_dist = pos_dist.exp()
-        return post_dist.sum(dim=0)
+        pos_dist = 0
+        for i in range(self.num_envs):
+            pos_dist += -2*torch.norm(self.dof_pos[i]-joint_angle_tensor[idx[i].to(torch.int32)],p=2)
+        pos_dist = pos_dist.exp()
+        return pos_dist/(self.num_envs)
 
 
