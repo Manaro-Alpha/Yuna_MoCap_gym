@@ -75,7 +75,7 @@ class LeggedRobot(BaseTask):
         self._init_buffers()
         self._prepare_reward_function()
         self.init_done = True
-        self.init_joint_angle_index = torch.Tensor(np.zeros((self.num_envs))).to(torch.int32).to(self.device).detach()
+        # self.res_index = torch.Tensor(np.zeros((self.num_envs))).to(torch.int32).to(self.device).detach()
 
 
     def step(self, actions):
@@ -165,7 +165,7 @@ class LeggedRobot(BaseTask):
         
         # reset robot states
         self._reset_dofs(env_ids)
-        # self._custom_reset(env_ids)
+        self._custom_reset(env_ids)
         self._reset_root_states(env_ids)
 
         self._resample_commands(env_ids)

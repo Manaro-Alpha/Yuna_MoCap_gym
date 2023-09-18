@@ -29,7 +29,7 @@ gym = gymapi.acquire_gym()
 args = gymutil.parse_arguments(description="Yuna CPG")
 
 sim_params = gymapi.SimParams()
-sim_params.dt = 1.0 / 60.0
+sim_params.dt = 1.0 / 100
 sim_params.substeps = 2
 if args.physics_engine == gymapi.SIM_FLEX:
     sim_params.flex.solver_type = 5
@@ -59,7 +59,7 @@ viewer = gym.create_viewer(sim, gymapi.CameraProperties())
 plane_params = gymapi.PlaneParams()
 gym.add_ground(sim, plane_params)
 
-asset_root = "assets"
+asset_root = "resources/robots/yuna"
 yuna_asset_file = "urdf/yuna.urdf"
 asset_options = gymapi.AssetOptions()
 asset_options.fix_base_link = True
@@ -288,8 +288,8 @@ dof_states.dtype = gymapi.DofState.dtype
 gym.set_actor_dof_states(env,actor_handle,dof_states,gymapi.STATE_POS)
 props = gym.get_actor_dof_properties(env, actor_handle)
 props["driveMode"].fill(gymapi.DOF_MODE_POS)
-props["stiffness"].fill(100)
-props["damping"].fill(0.05)
+props["stiffness"].fill(1000)
+props["damping"].fill(200)
 gym.set_actor_dof_properties(env, actor_handle, props)
 leg_pos = np.array([0,0,-1.5708,0,0,1.5708,0,0,-1.5708,0,0,1.5708,0,0,-1.5708,0,0,1.5708],dtype=np.float32)
 motion_data = []
@@ -299,23 +299,26 @@ file = open(file_name,'w')
 step = 1
 while not gym.query_viewer_has_closed(viewer):
     
-    gym.simulate(sim)
-    gym.fetch_results(sim, True)
+    # gym.simulate(sim)
+    # gym.fetch_results(sim, True)
 
-    # update the viewer
-    gym.step_graphics(sim);
-    gym.draw_viewer(viewer, sim, True)
-    gym.set_actor_dof_position_targets(env,actor_handle,leg_pos)
+    # # update the viewer
+    # gym.step_graphics(sim);
+    # gym.draw_viewer(viewer, sim, True)
+    # gym.set_actor_dof_position_targets(env,actor_handle,leg_pos)
 
-    # Wait for dt to elapse in real time.
-    # This synchronizes the physics simulation with the rendering rate.
-    gym.sync_frame_time(sim)
-    if step % 50 == 0:
-        walk('forward',eePos,2)
+    # # Wait for dt to elapse in real time.
+    # # This synchronizes the physics simulation with the rendering rate.
+    # gym.sync_frame_time(sim)
+    # if step % 50 == 0:
+    walk('forward',eePos,2)
     
     step += 1
-    state = gym.get_actor_dof_states(env,actor_handle,1)
-    file.write(','.join(map(str,np.array(state['pos']))) + '\n')
+    state = gym.get_actor_dof_states(env,actor_handle,3)
+    file.write(','.join(map(str,np.array(state))) + '\n')
+    # motion_data.append(state)
+
+# np.save("Yuna_train_data",motion_data)
 
 
 

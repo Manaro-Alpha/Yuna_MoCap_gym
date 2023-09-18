@@ -18,7 +18,29 @@ class YunaCfg(LeggedRobotCfg):
         noise = np.random.normal(0,0.001,joint_angle_array.shape)
         joint_angle_array = joint_angle_array + noise
         pos = [0.0,0.0,0.3]
-        joint_idx = np.random.randint(0,7)
+        joint_idx = np.random.randint(0,joint_angle_array.shape[0])
+        # default_joint_angles = { # = target angles [rad] when action = 0.0
+        #     'base1': 0.,
+        #     'base2': 0.,
+        #     'base3': 0.,
+        #     'base4': 0.,
+        #     'base5': 0.,
+        #     'base6': 0.,
+
+        #     'shoulder1': 0.,
+        #     'shoulder2': 0.,
+        #     'shoulder3': 0.,
+        #     'shoulder4': 0.,
+        #     'shoulder5': 0.,
+        #     'shoulder6': 0.,
+
+        #     'elbow1': -1.5708 + 0.05,    # - pi/2
+        #     'elbow2': 1.5708 - 0.05,     #   pi/2
+        #     'elbow3': -1. + 0.05,    # - pi/2
+        #     'elbow4': 1.5708 - 0.05,     #   pi/2
+        #     'elbow5': -1.5708 + 0.05,    # - pi/2
+        #     'elbow6': 1.5708 - 0.05,     #   pi/2
+        # }
         default_joint_angles = {
                 'base1': joint_angle_array[joint_idx][0],
                 'base2': joint_angle_array[joint_idx][3],
@@ -70,13 +92,13 @@ class YunaCfg(LeggedRobotCfg):
         #     return default_joint_angles
 
     class control(LeggedRobotCfg.control):
-        stiffness = {'base1': 100.,'base2': 100.,'base3': 100.,'base4': 100.,'base5': 100.,'base6': 100.,
-                     'shoulder1': 100.,'shoulder2': 100.,'shoulder3': 100.,'shoulder4': 100.,'shoulder5': 100.,'shoulder6': 100.,
-                     'elbow1': 100.,'elbow2': 100.,'elbow3': 100.,'elbow4': 100.,'elbow5': 100.,'elbow6': 100.}
+        stiffness = {'base1': 1000.,'base2': 1000.,'base3': 1000.,'base4': 1000.,'base5': 1000.,'base6': 1000.,
+                     'shoulder1': 1000.,'shoulder2': 1000.,'shoulder3': 1000.,'shoulder4': 1000.,'shoulder5': 1000.,'shoulder6': 1000.,
+                     'elbow1': 1000.,'elbow2': 1000.,'elbow3': 1000.,'elbow4': 1000.,'elbow5': 1000.,'elbow6': 1000.}
         
-        damping = {'base1': 0.05,'base2': 0.05,'base3': 0.05,'base4': 0.05,'base5': 0.05,'base6': 0.05,
-                     'shoulder1': 0.05,'shoulder2': 0.05,'shoulder3': 0.05,'shoulder4': 0.05,'shoulder5': 0.05,'shoulder6': 0.05,
-                     'elbow1': 0.05,'elbow2': 0.05,'elbow3': 0.05,'elbow4': 0.05,'elbow5': 0.05,'elbow6': 0.05}
+        damping = {'base1': 100,'base2': 100,'base3': 100,'base4': 100,'base5': 100,'base6': 100,
+                     'shoulder1': 100,'shoulder2': 100,'shoulder3': 100,'shoulder4': 100,'shoulder5': 100,'shoulder6': 100,
+                     'elbow1': 100,'elbow2': 100,'elbow3': 100,'elbow4': 100,'elbow5': 100,'elbow6': 100}
         
         action_scale = 0.25
         decimation = 4
@@ -108,6 +130,7 @@ class YunaCfg(LeggedRobotCfg):
             ang_vel_xy = -0.0
             feet_contact_forces = -0.
             pose_match = 0.65
+            vel_match = 0.1
 
 class YunaCfgPPO(LeggedRobotCfgPPO):
     class runner(LeggedRobotCfgPPO.runner):
