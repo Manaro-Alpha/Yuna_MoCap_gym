@@ -288,8 +288,8 @@ dof_states.dtype = gymapi.DofState.dtype
 gym.set_actor_dof_states(env,actor_handle,dof_states,gymapi.STATE_POS)
 props = gym.get_actor_dof_properties(env, actor_handle)
 props["driveMode"].fill(gymapi.DOF_MODE_POS)
-props["stiffness"].fill(1000)
-props["damping"].fill(200)
+props["stiffness"].fill(100)
+props["damping"].fill(0.05)
 gym.set_actor_dof_properties(env, actor_handle, props)
 leg_pos = np.array([0,0,-1.5708,0,0,1.5708,0,0,-1.5708,0,0,1.5708,0,0,-1.5708,0,0,1.5708],dtype=np.float32)
 motion_data = []
