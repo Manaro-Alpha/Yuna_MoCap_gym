@@ -4,7 +4,7 @@
 
 This repo is an attempt to make a hexapod learn walking motion using Proximal Policy Optimisation and using Motion Capture data generated using a custom CPG controller. This project is inspired by ![legged_gym](https://github.com/leggedrobotics/legged_gym)
 
-![]()
+![](https://github.com/Manaro-Alpha/Yuna_MoCap_gym/blob/main/GIF/Yuna_walk.gif)
 
 ## Installation
 
